@@ -1,0 +1,11 @@
+{
+  "name": "Kaohsiung Transit Live",
+  "description": "Interactive live bus tracking from Kaohsiung Main Station to Pier-2 Art Center and other iconic destinations.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "Interactive Maps",
+    "Real-time Simulation"
+  ]
+}
