@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Bus, MapPin, Navigation, Clock, Activity, Users, Shield, Zap, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
@@ -56,6 +57,25 @@ const createBusIcon = (color: string) => L.divIcon({
   iconSize: [32, 32],
   iconAnchor: [16, 16],
 });
+
+
+// Helper component to fix Leaflet size and handle centering
+function MapController({ center }: { center: [number, number] }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    map.setView(center);
+  }, [center, map]);
+
+  // Fix for map tiles not loading correctly on initialization
+  useEffect(() => {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+  }, [map]);
+
+  return null;
+}
 
 export default function App() {
   const [buses, setBuses] = useState<BusData[]>([]);
@@ -254,6 +274,7 @@ export default function App() {
           className="h-full w-full"
           zoomControl={false}
         >
+          <MapController center={selectedBus ? getBusPosition(selectedBus.routeId, selectedBus.progress) : KAOHSIUNG_CENTER} />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
